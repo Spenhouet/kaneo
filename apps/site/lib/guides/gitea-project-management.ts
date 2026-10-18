@@ -68,7 +68,7 @@ export const giteaProjectManagement: Guide = {
     {
       question: "Does the Gitea integration work with Forgejo?",
       answer:
-        "Kaneo's integration is built and documented for Gitea. Forgejo serves its API at the same path and aims to stay compatible with Gitea's, but since its 2024 hard fork that is no longer guaranteed, so test the connection on a scratch repository before relying on it.",
+        "Yes. The integration was tested against Forgejo 15.0.10 (LTS) and 16.0.6: verification, repository browsing, issue import, two-way issue, comment and label sync, and task moves from pushes, opened pull requests and merges all worked. Forgejo serves the same API path and sends the same webhook headers as Gitea, and both its Forgejo and Gitea webhook types work. Forgejo has diverged from Gitea since its 2024 hard fork, so check a scratch repository after major Forgejo upgrades.",
     },
     {
       question: "Is Kaneo free to self-host next to Gitea?",

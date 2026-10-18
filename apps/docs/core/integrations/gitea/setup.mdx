@@ -13,11 +13,21 @@ Connect a Kaneo project to one Gitea repository to sync issues and respond to br
 4. Enter the access token and repository owner and name. You can also browse repositories from the form.
 5. Choose **Verify access** and resolve any reported problem, then save the connection.
 
+Forgejo works the same way: use its base URL, and create its token under **Settings → Applications**. The integration was tested against Forgejo 15.0.10 (LTS) and 16.0.6.
+
 The API must be able to reach your Gitea server. Verification checks the token and repository permissions; it does not prove that webhooks can reach Kaneo in the other direction.
+
+Use the base URL that Gitea itself uses for links (its `ROOT_URL`). Kaneo matches incoming webhooks to the connection by the repository URL in the payload, so a webhook from a server reached under a different address is ignored.
+
+### Gitea on a private network
+
+Kaneo refuses to call servers that resolve to private or local addresses, and verification then reports the blocked address. If Gitea runs on your LAN or in the same Docker network, set `KANEO_ALLOW_PRIVATE_WEBHOOK_DESTINATIONS=true` on the Kaneo API. See [environment variables](/core/installation/environment-variables#notifications).
+
+Gitea and Forgejo have the same protection for webhooks. If Kaneo is on a private address, add its host name to `ALLOWED_HOST_LIST` in the `[webhook]` section of the Gitea `app.ini`, for example `ALLOWED_HOST_LIST = kaneo.example.internal`. Otherwise Gitea refuses each delivery with "webhook can only call allowed HTTP servers".
 
 ## Configure the webhook
 
-After saving, Kaneo shows a webhook URL and secret. Copy both into a repository webhook in Gitea under **Settings → Webhooks → Add Webhook → Gitea**.
+After saving, Kaneo shows a webhook URL and secret. Copy both into a repository webhook in Gitea under **Settings → Webhooks → Add Webhook → Gitea**. On Forgejo, the **Forgejo** and **Gitea** webhook types both work.
 
 | Gitea setting | Value |
 | --- | --- |
@@ -73,5 +83,7 @@ Choose **Disconnect** to remove the Kaneo connection. This does not delete the G
 | Repository not found | Check owner, name, and token access to private repositories. |
 | Verification succeeds, writes fail | Check token scopes as well as the account’s repository permissions. |
 | Invalid webhook signature | Copy the current secret from Kaneo and save it in Gitea. |
-| No tasks arrive | Check recent Gitea deliveries, selected events, repository identity, and the active connection. |
+| Verification reports a private or local address | Set `KANEO_ALLOW_PRIVATE_WEBHOOK_DESTINATIONS=true` on the API, see [Gitea on a private network](#gitea-on-a-private-network). |
+| Deliveries fail with "webhook can only call allowed HTTP servers" | Add the Kaneo host to `[webhook] ALLOWED_HOST_LIST` in the Gitea `app.ini`. |
+| No tasks arrive | Check recent Gitea deliveries, selected events, repository identity, and the active connection. The base URL in Kaneo must match the Gitea `ROOT_URL`. |
 | Task does not move after a push | Check the branch naming pattern and workflow mapping. |
