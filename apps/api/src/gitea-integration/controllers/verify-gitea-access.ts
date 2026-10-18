@@ -76,6 +76,18 @@ async function verifyGiteaAccess({
         };
       }
 
+      if (error.kind === "BLOCKED_DESTINATION") {
+        return {
+          isInstalled: false,
+          hasRequiredPermissions: false,
+          repositoryExists: false,
+          repositoryPrivate: null,
+          missingPermissions: [] as string[],
+          message: error.message,
+          failureReason: "private_destination" as const,
+        };
+      }
+
       if (error.kind === "INVALID_JSON") {
         return {
           isInstalled: false,

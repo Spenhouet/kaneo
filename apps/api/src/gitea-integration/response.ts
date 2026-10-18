@@ -56,11 +56,16 @@ export const giteaVerificationResultSchema = z
       description: "A human-readable summary to show the user.",
     }),
     failureReason: z
-      .enum(["not_a_gitea_instance", "redirected", "repository_not_found"])
+      .enum([
+        "not_a_gitea_instance",
+        "redirected",
+        "repository_not_found",
+        "private_destination",
+      ])
       .nullable()
       .openapi({
         description:
-          "Why verification failed, when it did. `redirected` usually means the base URL is behind a proxy that rewrites it.",
+          "Why verification failed, when it did. `redirected` usually means the base URL is behind a proxy that rewrites it. `private_destination` means the server resolves to a private address and KANEO_ALLOW_PRIVATE_WEBHOOK_DESTINATIONS is off.",
       }),
   })
   .openapi("GiteaVerificationResult");

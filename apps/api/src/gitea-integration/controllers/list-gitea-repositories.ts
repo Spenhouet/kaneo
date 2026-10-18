@@ -2,6 +2,7 @@ import { HTTPException } from "hono/http-exception";
 import { normalizeGiteaBaseUrl } from "../../plugins/gitea/config";
 import {
   createGiteaClient,
+  GiteaApiError,
   verifyGiteaToken,
 } from "../../plugins/gitea/utils/gitea-api";
 
@@ -25,7 +26,13 @@ async function listGiteaRepositories({
 
   try {
     await verifyGiteaToken(normalized, accessToken);
-  } catch {
+  } catch (error) {
+    if (
+      error instanceof GiteaApiError &&
+      error.kind === "BLOCKED_DESTINATION"
+    ) {
+      throw new HTTPException(400, { message: error.message });
+    }
     throw new HTTPException(400, {
       message: "Invalid Gitea token or could not reach instance.",
     });

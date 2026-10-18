@@ -1,5 +1,8 @@
 import * as Sentry from "@sentry/node";
-import { assertPublicDestination } from "../../../utils/assert-public-destination";
+import {
+  assertPublicDestination,
+  nonRoutableDestinationMessage,
+} from "../../../utils/assert-public-destination";
 import type { GiteaConfig } from "../config";
 import { normalizeGiteaBaseUrl } from "../config";
 
@@ -48,7 +51,8 @@ export type GiteaApiErrorKind =
   | "INVALID_JSON"
   | "HTTP_ERROR"
   | "TIMEOUT"
-  | "EMPTY_RESPONSE";
+  | "EMPTY_RESPONSE"
+  | "BLOCKED_DESTINATION";
 
 export class GiteaApiError extends Error {
   constructor(
@@ -71,6 +75,27 @@ function authHeaders(token: string): HeadersInit {
 
 const GITEA_FETCH_TIMEOUT_MS = 10_000;
 
+export const GITEA_BLOCKED_DESTINATION_MESSAGE =
+  "The Gitea server resolves to a non-routable address, such as a private or local network address. Kaneo blocks these unless the server sets KANEO_ALLOW_PRIVATE_WEBHOOK_DESTINATIONS=true.";
+
+async function assertGiteaDestination(root: string) {
+  try {
+    await assertPublicDestination(root, "Gitea");
+  } catch (error) {
+    if (
+      error instanceof Error &&
+      error.message === nonRoutableDestinationMessage("Gitea")
+    ) {
+      throw new GiteaApiError(
+        GITEA_BLOCKED_DESTINATION_MESSAGE,
+        400,
+        "BLOCKED_DESTINATION",
+      );
+    }
+    throw error;
+  }
+}
+
 export async function giteaFetch<T>(
   baseUrl: string,
   token: string,
@@ -80,7 +105,7 @@ export async function giteaFetch<T>(
   const root = normalizeGiteaBaseUrl(baseUrl);
   const url = `${root}/api/v1${path.startsWith("/") ? path : `/${path}`}`;
 
-  await assertPublicDestination(root, "Gitea");
+  await assertGiteaDestination(root);
 
   const controller = new AbortController();
   let timedOut = false;

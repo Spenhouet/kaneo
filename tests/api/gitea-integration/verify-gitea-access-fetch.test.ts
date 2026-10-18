@@ -158,4 +158,24 @@ describe("verifyGiteaAccess — fetch integration", () => {
     expect(result.failureReason).toBe("not_a_gitea_instance");
     expect(result.message).toBe("The URL does not point to a Gitea instance.");
   });
+
+  it("explains a blocked private address instead of failing with a server error", async () => {
+    delete process.env.KANEO_ALLOW_PRIVATE_WEBHOOK_DESTINATIONS;
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock as unknown as typeof fetch);
+
+    const result = await verifyGiteaAccess({
+      baseUrl: "http://127.0.0.1:3000",
+      accessToken: "token",
+      repositoryOwner: "owner",
+      repositoryName: "repo",
+    });
+
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(result.isInstalled).toBe(false);
+    expect(result.failureReason).toBe("private_destination");
+    expect(result.message).toContain(
+      "KANEO_ALLOW_PRIVATE_WEBHOOK_DESTINATIONS",
+    );
+  });
 });
