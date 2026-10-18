@@ -116,7 +116,7 @@ export const workflowSet = Command.make(
   "set",
   {
     integration: Argument.String("integration").pipe(
-      Argument.withDescription("github, gitlab or gitea"),
+      Argument.withDescription("github, gitlab, gitea or bitbucket"),
       Argument.optional,
     ),
     event: Argument.String("event").pipe(

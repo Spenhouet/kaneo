@@ -1,13 +1,14 @@
 import { Result } from "effect";
 import { InvalidArgument } from "../errors/errors.js";
 
-export const INTEGRATIONS = ["github", "gitlab", "gitea"] as const;
+export const INTEGRATIONS = ["github", "gitlab", "gitea", "bitbucket"] as const;
 export type Integration = (typeof INTEGRATIONS)[number];
 
 export const INTEGRATION_LABELS: Readonly<Record<Integration, string>> = {
   github: "GitHub",
   gitlab: "GitLab",
   gitea: "Gitea",
+  bitbucket: "Bitbucket",
 };
 
 export const EVENTS = [
@@ -66,7 +67,7 @@ export function parseIntegration(
   return Result.fail(
     new InvalidArgument({
       message: `"${input.trim()}" is not an integration with workflow rules.`,
-      hint: "Use github, gitlab or gitea.",
+      hint: "Use github, gitlab, gitea or bitbucket.",
     }),
   );
 }

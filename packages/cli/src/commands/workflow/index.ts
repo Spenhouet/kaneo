@@ -5,7 +5,7 @@ import { workflowSet } from "./set.js";
 
 export const workflow = Command.make("workflow").pipe(
   Command.withDescription(
-    "Move tasks to a column when GitHub, GitLab or Gitea events arrive",
+    "Move tasks to a column when GitHub, GitLab, Gitea or Bitbucket events arrive",
   ),
   Command.withSubcommands([workflowList, workflowSet, workflowDelete]),
 );

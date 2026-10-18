@@ -39,15 +39,16 @@ describe("parseWorkflowEvent", () => {
 });
 
 describe("parseIntegration", () => {
-  it("accepts the three git providers", () => {
+  it("accepts the git providers", () => {
     expect(parseIntegration("GitHub")).toEqual(Result.succeed("github"));
     expect(parseIntegration(" gitlab ")).toEqual(Result.succeed("gitlab"));
+    expect(parseIntegration("Bitbucket")).toEqual(Result.succeed("bitbucket"));
   });
 
   it("refuses other integrations", () => {
     const result = parseIntegration("slack");
     expect(Result.isFailure(result) && result.failure.hint).toBe(
-      "Use github, gitlab or gitea.",
+      "Use github, gitlab, gitea or bitbucket.",
     );
   });
 });
@@ -55,6 +56,7 @@ describe("parseIntegration", () => {
 describe("labels", () => {
   it("names known values and passes unknown ones through", () => {
     expect(integrationLabel("gitea")).toBe("Gitea");
+    expect(integrationLabel("bitbucket")).toBe("Bitbucket");
     expect(eventLabel("branch_push")).toBe("Branch pushed");
     expect(eventLabel("custom_event")).toBe("custom_event");
   });

@@ -118,7 +118,7 @@ export const workflowDelete = Command.make(
   {
     rule: Argument.String("rule").pipe(
       Argument.withDescription(
-        "Integration (github, gitlab, gitea) followed by the event, an event alone, or a rule id",
+        "Integration (github, gitlab, gitea, bitbucket) followed by the event, an event alone, or a rule id",
       ),
       Argument.optional,
     ),

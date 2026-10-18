@@ -37,7 +37,7 @@ export const workflowList = Command.make(
   (options) => runWorkflowList(options),
 ).pipe(
   Command.withDescription(
-    "List the rules that move tasks when GitHub, GitLab or Gitea events arrive",
+    "List the rules that move tasks when GitHub, GitLab, Gitea or Bitbucket events arrive",
   ),
   Command.provide(ApiLayer),
 );

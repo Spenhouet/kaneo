@@ -93,7 +93,7 @@ Credentials are resolved in this order: `--token`, then `KANEO_API_KEY`, then th
 | `kaneo project list`, `view`, `create`, `edit`, `archive`, `unarchive`, `move`, `delete` | Manage projects |
 | `kaneo column list`, `create`, `edit`, `move`, `delete` | Manage a project's columns |
 | `kaneo field list`, `create`, `delete` | Manage a project's custom fields |
-| `kaneo workflow list`, `set`, `delete` | Move tasks when GitHub, GitLab or Gitea events arrive |
+| `kaneo workflow list`, `set`, `delete` | Move tasks when GitHub, GitLab, Gitea or Bitbucket events arrive |
 | `kaneo workspace list`, `use`, `create`, `edit`, `leave`, `delete` | Choose and manage workspaces |
 | `kaneo member list`, `invite`, `role`, `remove` | Manage workspace members |
 | `kaneo invitation list`, `pending`, `accept`, `decline`, `cancel` | Manage invitations you sent or received |
