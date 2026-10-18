@@ -3554,6 +3554,192 @@
           "skipped"
         ]
       },
+      "BitbucketRepositoryList": {
+        "type": "object",
+        "properties": {
+          "repositories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BitbucketRepository"
+            }
+          }
+        },
+        "required": [
+          "repositories"
+        ]
+      },
+      "BitbucketRepository": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "full_name": {
+            "type": "string"
+          },
+          "workspace": {
+            "type": "string"
+          },
+          "private": {
+            "type": "boolean"
+          },
+          "html_url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "uuid",
+          "slug",
+          "name",
+          "full_name",
+          "workspace",
+          "private",
+          "html_url"
+        ]
+      },
+      "BitbucketVerificationResult": {
+        "type": "object",
+        "properties": {
+          "isInstalled": {
+            "type": "boolean",
+            "description": "True when the credentials reach the repository."
+          },
+          "hasRequiredPermissions": {
+            "type": "boolean"
+          },
+          "repositoryExists": {
+            "type": "boolean"
+          },
+          "repositoryPrivate": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "missingPermissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "message": {
+            "type": "string",
+            "description": "A human-readable summary to show the user."
+          },
+          "failureReason": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "invalid_credentials",
+              "repository_not_found",
+              null
+            ]
+          }
+        },
+        "required": [
+          "isInstalled",
+          "hasRequiredPermissions",
+          "repositoryExists",
+          "repositoryPrivate",
+          "missingPermissions",
+          "message",
+          "failureReason"
+        ]
+      },
+      "BitbucketIntegration": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "projectId": {
+            "type": "string"
+          },
+          "workspace": {
+            "type": "string"
+          },
+          "repositorySlug": {
+            "type": "string"
+          },
+          "authType": {
+            "type": "string",
+            "enum": [
+              "api_token",
+              "access_token"
+            ]
+          },
+          "email": {
+            "type": "string"
+          },
+          "maskedAccessToken": {
+            "type": "string"
+          },
+          "webhookUrl": {
+            "type": "string",
+            "description": "Where Bitbucket should POST events for this project."
+          },
+          "webhookSecret": {
+            "type": "string",
+            "description": "Only returned to callers with workspace:manage_settings, so the value can be pasted into Bitbucket."
+          },
+          "branchPattern": {
+            "type": "string"
+          },
+          "isActive": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "projectId",
+          "workspace",
+          "repositorySlug",
+          "authType",
+          "maskedAccessToken",
+          "webhookUrl",
+          "webhookSecret",
+          "isActive",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "BitbucketDeleteResult": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "message"
+        ]
+      },
       "GenericWebhookIntegration": {
         "type": [
           "object",
@@ -18982,6 +19168,566 @@
           },
           "404": {
             "description": "Project not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiKeyRateLimited"
+          }
+        }
+      }
+    },
+    "/bitbucket-integration/repositories": {
+      "post": {
+        "operationId": "listBitbucketRepositories",
+        "tags": [
+          "Bitbucket"
+        ],
+        "summary": "List Bitbucket repositories",
+        "description": "List the repositories of a Bitbucket Cloud workspace that the credentials can reach, for picking one to link. Sent as a POST because the token travels in the body rather than the URL.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "projectId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "workspace": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "authType": {
+                    "type": "string",
+                    "enum": [
+                      "api_token",
+                      "access_token"
+                    ],
+                    "description": "api_token: an Atlassian API token, sent with the account email. access_token: a repository, project or workspace access token."
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "Atlassian account email. Required with an API token."
+                  },
+                  "accessToken": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "projectId",
+                  "workspace",
+                  "authType",
+                  "accessToken"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Accessible repositories",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BitbucketRepositoryList"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid body, or invalid Bitbucket credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access to the project, or missing workspace:manage_settings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Project not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiKeyRateLimited"
+          }
+        }
+      }
+    },
+    "/bitbucket-integration/verify": {
+      "post": {
+        "operationId": "verifyBitbucketAccess",
+        "tags": [
+          "Bitbucket"
+        ],
+        "summary": "Verify Bitbucket access",
+        "description": "Check that the credentials reach the repository and can read its pull requests. Credential and permission failures are reported in the body. Omit accessToken to use the saved credentials.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "projectId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "workspace": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "repositorySlug": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "authType": {
+                    "type": "string",
+                    "enum": [
+                      "api_token",
+                      "access_token"
+                    ],
+                    "description": "api_token: an Atlassian API token, sent with the account email. access_token: a repository, project or workspace access token."
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "Atlassian account email. Required with an API token."
+                  },
+                  "accessToken": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Omit to verify with this project's saved credentials."
+                  }
+                },
+                "required": [
+                  "projectId",
+                  "workspace",
+                  "repositorySlug"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Verification result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BitbucketVerificationResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid body, or no saved credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access to the project, or missing workspace:manage_settings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Project not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiKeyRateLimited"
+          },
+          "500": {
+            "description": "Bitbucket verification failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bitbucket-integration/project/{projectId}": {
+      "get": {
+        "operationId": "getBitbucketIntegration",
+        "tags": [
+          "Bitbucket"
+        ],
+        "summary": "Get Bitbucket integration",
+        "description": "Get the Bitbucket integration for a project, or null when none is configured. The webhook secret is included only for callers with workspace:manage_settings.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "projectId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Bitbucket integration details, or null",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BitbucketIntegration"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access to the project",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Project not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiKeyRateLimited"
+          }
+        }
+      },
+      "post": {
+        "operationId": "createBitbucketIntegration",
+        "tags": [
+          "Bitbucket"
+        ],
+        "summary": "Create Bitbucket integration",
+        "description": "Link a project to a Bitbucket Cloud repository. The response carries the webhook URL and secret to add in the repository settings.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "projectId",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "workspace": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "repositorySlug": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "authType": {
+                    "type": "string",
+                    "enum": [
+                      "api_token",
+                      "access_token"
+                    ],
+                    "description": "api_token: an Atlassian API token, sent with the account email. access_token: a repository, project or workspace access token."
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "Atlassian account email. Required with an API token."
+                  },
+                  "accessToken": {
+                    "type": "string",
+                    "description": "Omit to keep the credentials already stored for this project."
+                  }
+                },
+                "required": [
+                  "workspace",
+                  "repositorySlug"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The stored integration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BitbucketIntegration"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid body, or repository not reachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bitbucket rejected the credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access to the project, or missing workspace:manage_settings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Project not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Repository already linked to another project",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiKeyRateLimited"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateBitbucketIntegration",
+        "tags": [
+          "Bitbucket"
+        ],
+        "summary": "Update Bitbucket integration",
+        "description": "Pause or resume the Bitbucket integration. Omitted fields keep their current value.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "projectId",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "isActive": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated integration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BitbucketIntegration"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access to the project, or missing workspace:manage_settings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Project or integration not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiKeyRateLimited"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteBitbucketIntegration",
+        "tags": [
+          "Bitbucket"
+        ],
+        "summary": "Delete Bitbucket integration",
+        "description": "Unlink a project from its Bitbucket repository.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "projectId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The integration was removed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BitbucketDeleteResult"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access to the project, or missing workspace:manage_settings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Project or Bitbucket integration not found",
             "content": {
               "application/json": {
                 "schema": {

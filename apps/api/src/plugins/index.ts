@@ -1,3 +1,4 @@
+import { bitbucketPlugin } from "./bitbucket";
 import { discordPlugin } from "./discord";
 import { genericWebhookPlugin } from "./generic-webhook";
 import { giteaPlugin } from "./gitea";
@@ -14,6 +15,7 @@ export function initializePlugins() {
   registerPlugin(githubPlugin);
   registerPlugin(giteaPlugin);
   registerPlugin(gitlabPlugin);
+  registerPlugin(bitbucketPlugin);
   registerPlugin(slackPlugin);
   registerPlugin(mattermostPlugin);
   registerPlugin(discordPlugin);

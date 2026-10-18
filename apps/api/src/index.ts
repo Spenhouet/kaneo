@@ -44,6 +44,9 @@ import discordIntegration from "./discord-integration";
 import { eventContext } from "./events";
 import externalLink from "./external-link";
 import genericWebhookIntegration from "./generic-webhook-integration";
+import bitbucketIntegration, {
+  handleBitbucketWebhookRoute,
+} from "./bitbucket-integration";
 import giteaIntegration, { handleGiteaWebhookRoute } from "./gitea-integration";
 import githubIntegration, {
   handleGithubWebhookRoute,
@@ -442,6 +445,11 @@ export function createApp() {
   api.post(
     "/gitlab-integration/webhook/:integrationId",
     handleGitlabWebhookRoute,
+  );
+
+  api.post(
+    "/bitbucket-integration/webhook/:integrationId",
+    handleBitbucketWebhookRoute,
   );
 
   const invitationPublicApi = api.get("/invitation/public/:id", async (c) => {
@@ -850,6 +858,10 @@ export function createApp() {
     "/gitlab-integration",
     gitlabIntegration,
   );
+  const bitbucketIntegrationApi = api.route(
+    "/bitbucket-integration",
+    bitbucketIntegration,
+  );
   const genericWebhookIntegrationApi = api.route(
     "/generic-webhook-integration",
     genericWebhookIntegration,
@@ -985,6 +997,7 @@ export function createApp() {
     githubIntegrationApi,
     giteaIntegrationApi,
     gitlabIntegrationApi,
+    bitbucketIntegrationApi,
     invitationApi,
     invitationPublicApi,
     labelApi,
@@ -1118,6 +1131,7 @@ const {
   githubIntegrationApi,
   giteaIntegrationApi,
   gitlabIntegrationApi,
+  bitbucketIntegrationApi,
   invitationApi,
   invitationPublicApi,
   labelApi,
@@ -1170,6 +1184,7 @@ export type AppType =
   | typeof githubIntegrationApi
   | typeof giteaIntegrationApi
   | typeof gitlabIntegrationApi
+  | typeof bitbucketIntegrationApi
   | typeof genericWebhookIntegrationApi
   | typeof discordIntegrationApi
   | typeof mattermostIntegrationApi
