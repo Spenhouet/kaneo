@@ -23,7 +23,7 @@ The Kaneo app for Android and iOS, built with Expo and React Native. Works with 
 
 ### Left out on purpose
 
-These are admin or desktop tasks that don't fit a phone: integration setup (GitHub, GitLab, Gitea, Slack, Discord, Telegram, Mattermost, webhooks) and sync rules, workflow rules, task import/export, calendar feeds, instance administration, custom role editing, per-member project access, billing, API key management, MCP, project icons and backgrounds, and Gantt/calendar views. They are still available on the web.
+These are admin or desktop tasks that don't fit a phone: integration setup (GitHub, GitLab, Gitea, Bitbucket, Slack, Discord, Telegram, Mattermost, webhooks) and sync rules, workflow rules, task import/export, calendar feeds, instance administration, custom role editing, per-member project access, billing, API key management, MCP, project icons and backgrounds, and Gantt/calendar views. They are still available on the web.
 
 ## Connecting
 

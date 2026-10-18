@@ -95,7 +95,7 @@ These endpoints follow external standards and keep their own error bodies:
 
 - **Device authorization.** `/api/auth/device/code` and `/api/auth/device/token` return RFC 8628 errors such as `{"error": "authorization_pending"}` and `{"error": "slow_down"}`. See [Authentication](/api-reference/authentication#poll-for-a-token).
 - **MCP OAuth.** `/api/mcp/register`, `/api/mcp/authorize`, `/api/mcp/authorize/request/{requestId}`, and `/api/mcp/token` return RFC 6749 and RFC 7591 errors shaped as `{"error": "invalid_request", "error_description": "..."}`. The `/api/mcp` endpoint itself answers with `{"error": ...}` bodies, such as `invalid_token`, and MCP protocol messages.
-- **Inbound webhooks.** The GitHub, Gitea, and GitLab webhook receivers are called by those services, not by API clients, and keep their existing responses.
+- **Inbound webhooks.** The GitHub, Gitea, GitLab, and Bitbucket webhook receivers are called by those services, not by API clients, and keep their existing responses.
 
 ## Older instances
 

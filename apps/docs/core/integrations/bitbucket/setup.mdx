@@ -1,0 +1,78 @@
+---
+title: Connect Bitbucket
+description: Link a Bitbucket Cloud repository, configure its webhook, and move tasks from branches and pull requests.
+---
+
+Connect a Kaneo project to one Bitbucket Cloud repository to link branches and pull requests to tasks and move those tasks through your workflow. You need permission to manage the Kaneo project, a Bitbucket token that can read the repository and its pull requests, and repository admin access to add the webhook.
+
+Bitbucket issues are not synced. Tasks stay in Kaneo, and Bitbucket activity links to them.
+
+## Create a token
+
+Kaneo accepts either kind of Bitbucket Cloud credential:
+
+| Credential | Where to create it | Scopes |
+| --- | --- | --- |
+| API token | Atlassian account settings, **Security → Create and manage API tokens → Create API token with scopes**, app **Bitbucket** | `read:repository:bitbucket`, `read:pullrequest:bitbucket` |
+| Access token | Repository, project, or workspace settings in Bitbucket, **Security → Access tokens** | **Repositories: Read**, **Pull requests: Read** |
+
+An API token acts as your Atlassian account, so Kaneo also needs the email address of that account. An access token belongs to the repository, project, or workspace and needs no email.
+
+## Connect the repository
+
+1. In Kaneo, open **Settings → Projects**, select your project, and open **Integrations → Bitbucket**.
+2. Choose the token type and paste the token. For an API token, enter the account email as well.
+3. Enter the workspace and repository as `workspace/repository`, using the slugs from the repository URL. You can also browse the repositories of a workspace from the form.
+4. Wait for the access check to pass, then choose **Connect repository**.
+
+Verification checks that the token can read the repository and its pull requests. It does not prove that webhooks can reach Kaneo in the other direction.
+
+## Configure the webhook
+
+After connecting, Kaneo shows a webhook URL and secret. In Bitbucket, open the repository's **Repository settings → Webhooks → Add webhook** and set:
+
+| Bitbucket setting | Value |
+| --- | --- |
+| Title | Any name, such as `Kaneo` |
+| URL | The webhook URL shown in Kaneo |
+| Secret | The exact secret shown in Kaneo |
+| Status | Active |
+| Triggers | **Repository: Push** and **Pull Request: Created, Updated, Merged, Declined** |
+
+The URL has this shape:
+
+```text
+https://kaneo.example.com/api/bitbucket-integration/webhook/INTEGRATION_ID
+```
+
+Kaneo checks the `X-Hub-Signature` header of every delivery against the secret and refuses unsigned or wrongly signed requests. Bitbucket Cloud must be able to reach your Kaneo API over the internet.
+
+## How tasks move
+
+| Bitbucket event | Kaneo result | Workflow event |
+| --- | --- | --- |
+| Push to a branch whose name matches the branch pattern | Links the branch and moves the task | `branch_push` |
+| Pull request created or updated | Links the pull request and moves the task | `pr_opened` |
+| Pull request merged | Marks the link merged and moves the task once no other linked pull request is open | `pr_merged` |
+| Pull request declined | Marks the link closed and leaves the task where it is | None |
+
+Kaneo finds the task for a pull request from its source branch, or from a task ID such as `KAN-12` or a Kaneo task link in its title or description. Pushes to `main`, `master`, `develop`, `staging`, and `production` are ignored.
+
+In the project's [Workflow settings](/core/functional/configure-workflows), map these events to the columns you want. Without a rule, branch pushes move tasks to **In Progress**, opened pull requests to **In Review**, and merged pull requests to **Done**.
+
+## Replace a token or disconnect
+
+To rotate credentials, enter a replacement token and save. An empty token field keeps the saved token.
+
+Choose **Disconnect** to remove the Kaneo connection. This does not delete the Bitbucket repository or Kaneo tasks. Remove the webhook in Bitbucket as well, and revoke the token if nothing else uses it.
+
+## Troubleshooting
+
+| Problem | What to check |
+| --- | --- |
+| Bitbucket rejected the credentials | Check the token, and for an API token, the account email. |
+| Repository not found | Check the workspace and repository slugs and that the token can see the repository. |
+| Pull requests cannot be read | Add the pull request read scope to the token. |
+| Invalid webhook signature | Copy the current secret from Kaneo and save it in the Bitbucket webhook. |
+| Task does not move after a push | Check the branch naming pattern and workflow mapping. |
+| Nothing arrives | Check the webhook's request history in Bitbucket and that the integration is not paused. |
