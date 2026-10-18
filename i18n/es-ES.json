@@ -825,7 +825,8 @@
 			"statusPaused": "En pausa",
 			"connect": "Conectar",
 			"configure": "Configurar",
-			"done": "Listo"
+			"done": "Listo",
+			"bitbucketSectionSubtitle": "Link Bitbucket Cloud branches and pull requests to tasks."
 		},
 		"projectVisibility": {
 			"pageTitle": "Visibilidad del Proyecto",
@@ -2399,6 +2400,32 @@
 		},
 		"shared": {
 			"autosave": "Los cambios se guardan automáticamente"
+		},
+		"bitbucketIntegration": {
+			"authTypeAccessToken": "Repository, project or workspace access token",
+			"authTypeApiToken": "API token",
+			"authTypeLabel": "Token type",
+			"browseEmpty": "This token can't see any repositories in the workspace.",
+			"browseModalHint": "Repositories in {{workspace}} that your token can access.",
+			"browseNeedsCredentials": "Enter a token and the workspace to browse.",
+			"chooseRepositoryDescription": "Type workspace/repository or pick one from the list.",
+			"emailLabel": "Atlassian account email",
+			"repositoryPathInvalid": "Enter the repository as workspace/repository.",
+			"signInDescription": "Use a token that can read the repository and its pull requests.",
+			"signInTitle": "Sign in to Bitbucket",
+			"toast": {
+				"removed": "Bitbucket integration removed",
+				"removeError": "Failed to remove Bitbucket integration",
+				"updated": "Bitbucket integration saved",
+				"updateError": "Failed to save Bitbucket integration",
+				"verifyError": "Failed to verify Bitbucket access",
+				"verifyFirst": "Verify access failed. Check the token and repository"
+			},
+			"tokenLabel": "Token",
+			"tokenPlaceholder": "Paste token",
+			"tokenPlaceholderUpdate": "Paste new token to rotate",
+			"webhookEvents": "Turn on Repository push and Pull request created, updated, merged, and declined.",
+			"webhookHint": "Add this webhook in the repository settings so pushes and pull requests reach Kaneo."
 		}
 	},
 	"navigation": {

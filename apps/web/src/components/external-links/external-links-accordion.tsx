@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { BitbucketIcon } from "@/components/icons/bitbucket-icon";
 import { GithubIcon } from "@/components/icons/github-icon";
 import { GitlabIcon } from "@/components/icons/gitlab-icon";
 import { SectionAddButton } from "@/components/task/sections/section-add-button";
@@ -234,7 +235,9 @@ export function ExternalLinksAccordion({
                         rel="noopener noreferrer"
                         className="flex min-w-0 flex-1 items-center gap-2.5 self-stretch outline-none focus-visible:underline"
                       >
-                        {isGiteaResourceLink(link) ? (
+                        {link.integration?.type === "bitbucket" ? (
+                          <BitbucketIcon className="size-3.5 shrink-0 text-muted-foreground" />
+                        ) : isGiteaResourceLink(link) ? (
                           <FolderGit className="size-3.5 shrink-0 text-muted-foreground" />
                         ) : isGitlabResourceLink(link) ? (
                           <GitlabIcon className="size-3.5 shrink-0 text-muted-foreground" />

@@ -1,5 +1,6 @@
 import { Webhook } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
+import { BitbucketIcon } from "@/components/icons/bitbucket-icon";
 import { DiscordIcon } from "@/components/icons/discord-icon";
 import { GiteaIcon } from "@/components/icons/gitea-icon";
 import { GithubIcon } from "@/components/icons/github-icon";
@@ -7,6 +8,7 @@ import { GitlabIcon } from "@/components/icons/gitlab-icon";
 import { MattermostIcon } from "@/components/icons/mattermost-icon";
 import { SlackIcon } from "@/components/icons/slack-icon";
 import { TelegramIcon } from "@/components/icons/telegram-icon";
+import { BitbucketIntegrationSettings } from "@/components/project/bitbucket-integration/bitbucket-integration-settings";
 import { DiscordIntegrationSettings } from "@/components/project/discord-integration-settings";
 import { GenericWebhookIntegrationSettings } from "@/components/project/generic-webhook-integration-settings";
 import { GiteaIntegrationSettings } from "@/components/project/gitea-integration/gitea-integration-settings";
@@ -20,6 +22,7 @@ export type IntegrationId =
   | "github"
   | "gitea"
   | "gitlab"
+  | "bitbucket"
   | "slack"
   | "discord"
   | "mattermost"
@@ -63,6 +66,15 @@ export const INTEGRATIONS: IntegrationDefinition[] = [
     icon: GitlabIcon,
     iconClassName: "text-[#FC6D26]",
     Settings: GitlabIntegrationSettings,
+  },
+  {
+    id: "bitbucket",
+    category: "code",
+    name: "Bitbucket",
+    descriptionKey: "settings:projectIntegrations.bitbucketSectionSubtitle",
+    icon: BitbucketIcon,
+    iconClassName: "text-[#2684FF]",
+    Settings: BitbucketIntegrationSettings,
   },
   {
     id: "slack",

@@ -52,7 +52,7 @@ export function AutomationCard({
           ) : undefined
         }
       />
-      {WORKFLOW_EVENTS.map((event) => (
+      {(connection.events ?? WORKFLOW_EVENTS).map((event) => (
         <AutomationRuleRow
           key={event}
           event={event}

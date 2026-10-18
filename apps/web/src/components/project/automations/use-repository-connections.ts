@@ -7,6 +7,7 @@ import {
   REPOSITORY_PROVIDERS,
   type RepositoryProvider,
 } from "@/components/project/automations/repository-providers";
+import useGetBitbucketIntegration from "@/hooks/queries/bitbucket-integration/use-get-bitbucket-integration";
 import useGetGiteaIntegration from "@/hooks/queries/gitea-integration/use-get-gitea-integration";
 import useGetGithubIntegration from "@/hooks/queries/github-integration/use-get-github-integration";
 import useGetGitlabIntegration from "@/hooks/queries/gitlab-integration/use-get-gitlab-integration";
@@ -21,6 +22,7 @@ export function useRepositoryConnections(
   const github = useGetGithubIntegration(projectId);
   const gitea = useGetGiteaIntegration(projectId);
   const gitlab = useGetGitlabIntegration(projectId);
+  const bitbucket = useGetBitbucketIntegration(projectId);
 
   const statuses = {
     github: getIntegrationStatus({
@@ -49,6 +51,16 @@ export function useRepositoryConnections(
       configured: Boolean(gitlab.data),
       isActive: gitlab.data?.isActive,
       detail: gitlab.data?.projectPath,
+    }),
+    bitbucket: getIntegrationStatus({
+      queryStatus: bitbucket.status,
+      hasData: bitbucket.data !== undefined,
+      configured: Boolean(bitbucket.data),
+      isActive: bitbucket.data?.isActive,
+      detail: formatRepository(
+        bitbucket.data?.workspace,
+        bitbucket.data?.repositorySlug,
+      ),
     }),
   };
 

@@ -1658,6 +1658,7 @@
 			"giteaSectionSubtitle": "Synchronize tasks with a self-hosted Gitea instance (issues, PRs, webhooks).",
 			"gitlabSectionTitle": "GitLab Integration",
 			"gitlabSectionSubtitle": "Synchronize tasks with GitLab.com or a self-managed instance.",
+			"bitbucketSectionSubtitle": "Link Bitbucket Cloud branches and pull requests to tasks.",
 			"discordSectionTitle": "Discord Integration",
 			"discordSectionSubtitle": "Send project task updates into a Discord channel with a webhook.",
 			"genericWebhookSectionTitle": "Webhooks",
@@ -1908,6 +1909,32 @@
 			"noSearchMatchTitle": "No matching projects",
 			"useProject": "Use project",
 			"webhookEvents": "Turn on push, issue, comment, and merge request events."
+		},
+		"bitbucketIntegration": {
+			"toast": {
+				"verifyError": "Failed to verify Bitbucket access",
+				"verifyFirst": "Verify access failed. Check the token and repository",
+				"updated": "Bitbucket integration saved",
+				"updateError": "Failed to save Bitbucket integration",
+				"removed": "Bitbucket integration removed",
+				"removeError": "Failed to remove Bitbucket integration"
+			},
+			"signInTitle": "Sign in to Bitbucket",
+			"signInDescription": "Use a token that can read the repository and its pull requests.",
+			"authTypeLabel": "Token type",
+			"authTypeApiToken": "API token",
+			"authTypeAccessToken": "Repository, project or workspace access token",
+			"emailLabel": "Atlassian account email",
+			"tokenLabel": "Token",
+			"tokenPlaceholder": "Paste token",
+			"tokenPlaceholderUpdate": "Paste new token to rotate",
+			"chooseRepositoryDescription": "Type workspace/repository or pick one from the list.",
+			"repositoryPathInvalid": "Enter the repository as workspace/repository.",
+			"browseModalHint": "Repositories in {{workspace}} that your token can access.",
+			"browseNeedsCredentials": "Enter a token and the workspace to browse.",
+			"browseEmpty": "This token can't see any repositories in the workspace.",
+			"webhookHint": "Add this webhook in the repository settings so pushes and pull requests reach Kaneo.",
+			"webhookEvents": "Turn on Repository push and Pull request created, updated, merged, and declined."
 		},
 		"slackIntegration": {
 			"validation": {

@@ -7,6 +7,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import useGetBitbucketIntegration from "@/hooks/queries/bitbucket-integration/use-get-bitbucket-integration";
 import useGetGiteaIntegration from "@/hooks/queries/gitea-integration/use-get-gitea-integration";
 import useGetGithubIntegration from "@/hooks/queries/github-integration/use-get-github-integration";
 import useGetGitlabIntegration from "@/hooks/queries/gitlab-integration/use-get-gitlab-integration";
@@ -38,6 +39,7 @@ export function useTaskCopyActions({
   const { data: github } = useGetGithubIntegration(projectId);
   const { data: gitea } = useGetGiteaIntegration(projectId);
   const { data: gitlab } = useGetGitlabIntegration(projectId);
+  const { data: bitbucket } = useGetBitbucketIntegration(projectId);
 
   const copy = async (text: string, message: string, icon: LucideIcon) => {
     if (!text) return;
@@ -88,7 +90,10 @@ export function useTaskCopyActions({
     },
     copyBranch: () => {
       const pattern =
-        github?.branchPattern || gitea?.branchPattern || gitlab?.branchPattern;
+        github?.branchPattern ||
+        gitea?.branchPattern ||
+        gitlab?.branchPattern ||
+        bitbucket?.branchPattern;
       void copy(
         generateBranchName(pattern, project?.slug, task?.number, task?.title),
         t("tasks:properties.taskBranchCopied"),

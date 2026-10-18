@@ -6789,6 +6789,9 @@
 						"gitlabSectionSubtitle": {
 							"type": "string"
 						},
+						"bitbucketSectionSubtitle": {
+							"type": "string"
+						},
 						"discordSectionTitle": {
 							"type": "string"
 						},
@@ -6851,6 +6854,7 @@
 						"giteaSectionSubtitle",
 						"gitlabSectionTitle",
 						"gitlabSectionSubtitle",
+						"bitbucketSectionSubtitle",
 						"discordSectionTitle",
 						"discordSectionSubtitle",
 						"genericWebhookSectionTitle",
@@ -8150,6 +8154,111 @@
 						"openInGitlab",
 						"retry",
 						"importPermissionHint"
+					]
+				},
+				"bitbucketIntegration": {
+					"type": "object",
+					"additionalProperties": false,
+					"properties": {
+						"toast": {
+							"type": "object",
+							"additionalProperties": false,
+							"properties": {
+								"verifyError": {
+									"type": "string"
+								},
+								"verifyFirst": {
+									"type": "string"
+								},
+								"updated": {
+									"type": "string"
+								},
+								"updateError": {
+									"type": "string"
+								},
+								"removed": {
+									"type": "string"
+								},
+								"removeError": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"verifyError",
+								"verifyFirst",
+								"updated",
+								"updateError",
+								"removed",
+								"removeError"
+							]
+						},
+						"signInTitle": {
+							"type": "string"
+						},
+						"signInDescription": {
+							"type": "string"
+						},
+						"authTypeLabel": {
+							"type": "string"
+						},
+						"authTypeApiToken": {
+							"type": "string"
+						},
+						"authTypeAccessToken": {
+							"type": "string"
+						},
+						"emailLabel": {
+							"type": "string"
+						},
+						"tokenLabel": {
+							"type": "string"
+						},
+						"tokenPlaceholder": {
+							"type": "string"
+						},
+						"tokenPlaceholderUpdate": {
+							"type": "string"
+						},
+						"chooseRepositoryDescription": {
+							"type": "string"
+						},
+						"repositoryPathInvalid": {
+							"type": "string"
+						},
+						"browseModalHint": {
+							"type": "string"
+						},
+						"browseNeedsCredentials": {
+							"type": "string"
+						},
+						"browseEmpty": {
+							"type": "string"
+						},
+						"webhookHint": {
+							"type": "string"
+						},
+						"webhookEvents": {
+							"type": "string"
+						}
+					},
+					"required": [
+						"toast",
+						"signInTitle",
+						"signInDescription",
+						"authTypeLabel",
+						"authTypeApiToken",
+						"authTypeAccessToken",
+						"emailLabel",
+						"tokenLabel",
+						"tokenPlaceholder",
+						"tokenPlaceholderUpdate",
+						"chooseRepositoryDescription",
+						"repositoryPathInvalid",
+						"browseModalHint",
+						"browseNeedsCredentials",
+						"browseEmpty",
+						"webhookHint",
+						"webhookEvents"
 					]
 				},
 				"slackIntegration": {
@@ -10043,6 +10152,7 @@
 				"githubIntegration",
 				"giteaIntegration",
 				"gitlabIntegration",
+				"bitbucketIntegration",
 				"slackIntegration",
 				"discordIntegration",
 				"mattermostIntegration",

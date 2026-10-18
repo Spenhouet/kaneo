@@ -4,6 +4,7 @@ import {
   getIntegrationStatus,
 } from "@/components/project/integrations/get-integration-status";
 import type { IntegrationId } from "@/components/project/integrations/integration-definitions";
+import useGetBitbucketIntegration from "@/hooks/queries/bitbucket-integration/use-get-bitbucket-integration";
 import useGetDiscordIntegration from "@/hooks/queries/discord-integration/use-get-discord-integration";
 import useGetGenericWebhookIntegration from "@/hooks/queries/generic-webhook-integration/use-get-generic-webhook-integration";
 import useGetGiteaIntegration from "@/hooks/queries/gitea-integration/use-get-gitea-integration";
@@ -19,6 +20,7 @@ export function useIntegrationStatuses(projectId: string) {
   const github = useGetGithubIntegration(projectId);
   const gitea = useGetGiteaIntegration(projectId);
   const gitlab = useGetGitlabIntegration(projectId);
+  const bitbucket = useGetBitbucketIntegration(projectId);
   const slack = useGetSlackIntegration(projectId);
   const discord = useGetDiscordIntegration(projectId);
   const mattermost = useGetMattermostIntegration(projectId);
@@ -52,6 +54,16 @@ export function useIntegrationStatuses(projectId: string) {
       configured: Boolean(gitlab.data),
       isActive: gitlab.data?.isActive,
       detail: gitlab.data?.projectPath,
+    }),
+    bitbucket: getIntegrationStatus({
+      queryStatus: bitbucket.status,
+      hasData: bitbucket.data !== undefined,
+      configured: Boolean(bitbucket.data),
+      isActive: bitbucket.data?.isActive,
+      detail: formatRepository(
+        bitbucket.data?.workspace,
+        bitbucket.data?.repositorySlug,
+      ),
     }),
     slack: getIntegrationStatus({
       queryStatus: slack.status,
@@ -92,6 +104,7 @@ export function useIntegrationStatuses(projectId: string) {
     github,
     gitea,
     gitlab,
+    bitbucket,
     slack,
     discord,
     mattermost,
